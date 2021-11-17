@@ -5,7 +5,3 @@ storage: none
 framework: netcoreapp5.0
 
 nuget NLog
-nuget FSCheck
-nuget FSharp.Data
-nuget Thoth.Json.Net
-nuget FsToolkit.ErrorHandling

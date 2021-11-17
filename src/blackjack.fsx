@@ -31,24 +31,26 @@ module Blackjack =
     let private isBJ doc = score doc = BlackJack
     let private isLT17 doc = score doc < 17
     let private isGTBJ doc = score doc > BlackJack
-    let private isLEMe (magnus, me) = score magnus <= score me
 
-    let rec private play' doc me magnus =
+    let play doc me magnus = async {
 
-        let getTwoCards = DeckOfCards.giveReceiveX 2 doc
-        let getACard = DeckOfCards.giveReceiveX 1 doc
-        let me' f = f me |> fun (doc',me') -> play' doc' me' magnus
-        let magnus' f = f magnus |> fun (doc',magnus') -> play' doc' me magnus'  
-        let result = me, magnus, doc 
+        let rec loop doc me magnus =
 
-        match (me, magnus) with
-        | [], _ -> me' getTwoCards
-        | _, [] -> magnus' getTwoCards
-        | [e1;e2], [m1;m2] when isBJ [e1;e2] || isBJ [m1;m2] -> result
-        | e::et, _ when isLT17 (e::et) -> me' getACard
-        | e::et, _ when isBJ (e::et) || isGTBJ (e::et) -> result
-        | _, m::mt when isLEMe (m::mt, me) -> magnus' getACard
-        | _, _ -> result
+            let getTwoCards = DeckOfCards.giveReceiveX 2 doc
+            let getACard = DeckOfCards.giveReceiveX 1 doc
+            let me' f = f me |> fun (doc',me') -> loop doc' me' magnus
+            let magnus' f = f magnus |> fun (doc',magnus') -> loop doc' me magnus'
+            let isLEMe magnus = score magnus <= score me
+            let result = me, magnus
 
-    let play = play' (DeckOfCards.random (System.Random()))
+            match (me, magnus) with
+            | [], _ -> me' getTwoCards
+            | _, [] -> magnus' getTwoCards
+            | [e1;e2], [m1;m2] when isBJ [e1;e2] || isBJ [m1;m2] -> result
+            | e::et, _ when isLT17 (e::et) -> me' getACard
+            | e::et, _ when isBJ (e::et) || isGTBJ (e::et) -> result
+            | _, m::mt when isLEMe (m::mt) -> magnus' getACard
+            | _, _ -> result
 
+        return loop doc me magnus
+}
