@@ -5,7 +5,7 @@ module Card =
     type Suite = Spade | Heart | Club | Diamond
 
     [<RequireQualifiedAccess>]
-    type Value = private Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten |Jack | Queen | King | Ace
+    type Value = Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten |Jack | Queen | King | Ace
 
     let private suitName = 
         function | Suite.Spade -> "S" | Suite.Heart -> "H" | Suite.Club -> "C" | Suite.Diamond -> "D"
