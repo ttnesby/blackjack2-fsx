@@ -21,7 +21,7 @@ module DeckOfCards =
                 s,v
         |],r) |> shuffleArray |> List.ofArray
 
-    let show doc = List.map Card.name doc
+    let show doc = List.map Card.name doc 
 
     let private give  = function | [] -> None,[] | [h] -> Some h,[] | h::t -> Some h,t
 

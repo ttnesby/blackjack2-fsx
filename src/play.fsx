@@ -32,23 +32,13 @@ let getParams : GetParams = fun () ->
 let createGames p = 
         seq {for n in 1..p -> Blackjack.play (DeckOfCards.random (System.Random())) [] []}
 
-let showResult (me, magnus) =
-    printfn "Winner: you can handle this..."
+let showGameResult (winner, me, magnus) =
+    printfn $"Winner: {winner}"
     printfn $"me:     {Blackjack.score me} | %A{DeckOfCards.show me}"
     printfn $"magnus: {Blackjack.score magnus} | %A{DeckOfCards.show magnus}"
+    printfn "-------------------------------------------------"
 
-let showSummary (k,a) = printfn $"{k} winning {Array.length a} games"
-
-let resolveWinner (me, magnus) = 
-    let me' = "Me"
-    let magnus' = "Magnus"
-    match (Blackjack.score me, Blackjack.score magnus) with
-    | 21,21 -> "Draw"
-    | 21, _ -> me'
-    | _, 21 -> magnus'
-    | x, _ when x > Blackjack.BlackJack -> magnus'
-    | _, y when y > Blackjack.BlackJack -> me'
-    | _, _ -> magnus'
+let showGamesSummary (s: string * _[]) = printfn $"{fst s} as winner of [{Array.length (snd s)}] games"
 
 getParams () 
 |> Async.RunSynchronously
@@ -61,8 +51,11 @@ getParams ()
     |> ALog.logPassThroughX ALog.inf $"{p.NoOfGames} games completed"
     |> fun ra -> 
         if p.NoOfGames <= DefaultNoOfGames 
-        then Array.map showResult ra 
-        else Array.map resolveWinner ra |> Array.groupBy id |> Array.sortBy fst |> Array.map showSummary  
+        then Array.map showGameResult ra 
+        else 
+            Array.map (fun (w: string, _, _) -> ())
+            // |> Array.groupBy   
+            // |> Array.map showGamesSummary  
     |> ignore
     0
 | Error e ->

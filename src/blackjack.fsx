@@ -41,16 +41,22 @@ module Blackjack =
             let me' f = f me |> fun (doc',me') -> loop doc' me' magnus
             let magnus' f = f magnus |> fun (doc',magnus') -> loop doc' me magnus'
             let isLEMe magnus = score magnus <= score me
-            let result = me, magnus
+            let result winner = winner, me, magnus
+            let wMe = result "Me    "
+            let wMagnus = result "Magnus"
 
             match (me, magnus) with
             | [], _ -> me' getTwoCards
             | _, [] -> magnus' getTwoCards
-            | [e1;e2], [m1;m2] when isBJ [e1;e2] || isBJ [m1;m2] -> result
+            | [e1;e2], [m1;m2] when isBJ [e1;e2] && isBJ [m1;m2] -> result "Draw  "
+            | [e1;e2], _ when isBJ [e1;e2] -> wMe
+            | _, [m1;m2] when isBJ [m1;m2] -> wMagnus
             | e::et, _ when isLT17 (e::et) -> me' getACard
-            | e::et, _ when isBJ (e::et) || isGTBJ (e::et) -> result
+            | e::et, _ when isBJ (e::et) -> wMe 
+            | e::et, _ when isGTBJ (e::et) -> wMagnus            
             | _, m::mt when isLEMe (m::mt) -> magnus' getACard
-            | _, _ -> result
+            | _, m::mt when isGTBJ (m::mt) -> wMe
+            | _, _ -> wMagnus
 
         return loop doc me magnus
-}
+    }
