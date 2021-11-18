@@ -48,14 +48,14 @@ module Blackjack =
             match (me, magnus) with
             | [], _ -> me' getTwoCards
             | _, [] -> magnus' getTwoCards
-            | [e1;e2], [m1;m2] when isBJ [e1;e2] && isBJ [m1;m2] -> result "Draw  "
-            | [e1;e2], _ when isBJ [e1;e2] -> wMe
-            | _, [m1;m2] when isBJ [m1;m2] -> wMagnus
-            | e::et, _ when isLT17 (e::et) -> me' getACard
-            | e::et, _ when isBJ (e::et) -> wMe 
-            | e::et, _ when isGTBJ (e::et) -> wMagnus            
-            | _, m::mt when isLEMe (m::mt) -> magnus' getACard
-            | _, m::mt when isGTBJ (m::mt) -> wMe
+            | [_;_], [_;_] when isBJ me && isBJ magnus -> result "Draw  "
+            | [_;_], _ when isBJ me -> wMe
+            | _, [_;_] when isBJ magnus -> wMagnus
+            | _::_, _ when isLT17 me -> me' getACard
+            | _::_, _ when isBJ me -> wMe 
+            | _::_, _ when isGTBJ me -> wMagnus            
+            | _, _::_ when isLEMe magnus -> magnus' getACard
+            | _, _::_ when isGTBJ magnus -> wMe
             | _, _ -> wMagnus
 
         return loop doc me magnus
