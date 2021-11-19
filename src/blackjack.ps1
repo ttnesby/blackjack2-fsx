@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param (
-    [Parameter(HelpMessage = "URL til kortstokk", Mandatory = $false)]
+    [Parameter(HelpMessage = "URL to deck of cards (doc)", Mandatory = $false)]
     [string]
-    $urlKortstokk = 'http://nav-deckofcards.herokuapp.com/shuffle'
+    $urlDOC = 'http://nav-deckofcards.herokuapp.com/shuffle'
 )
 
 $ErrorActionPreference = [System.Management.Automation.ActionPreference]::Stop
@@ -11,7 +11,7 @@ function blackjack {
     param(
         $me = @(),
         $magnus = @(),
-        $doc = ((Invoke-WebRequest -Uri $urlKortstokk).Content | ConvertFrom-Json)
+        $doc = ((Invoke-WebRequest -Uri $urlDOC).Content | ConvertFrom-Json)
     )
 
     $function:cardScore = { param($card)
@@ -60,12 +60,12 @@ function blackjack {
         }
 
         $MagnusLEMe = { (docScore $magnus) -le (docScore $me) }
-        
+
         $winMe = { (bjResult 'me' $me $magnus) }
         $winMagnus = { (bjResult 'magnus' $me $magnus) }
         $winDraw = { (bjResult 'draw' $me $magnus) }
 
-        switch (0) {
+        switch ('**blackjack compact**') {
             { (noCards $me) } { giveMe 2; break }
             { (noCards $magnus) } { giveMagnus 2; break }
             { (isBJ $me -and isBJ $magnus) } { return (&$winDraw) }
