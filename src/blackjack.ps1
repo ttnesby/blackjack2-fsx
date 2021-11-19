@@ -19,25 +19,13 @@ $function:cardScore = { param($card)
 
 $function:cardShow = { param($card) $card.suit[0] + $card.value }
 
-$function:docScore = { param ([object[]] $doc)
-
-    $function:sloop = { param([object[]]$doc, $sum)
-        if ($doc.Count -eq 1) { $sum + (cardScore $doc[0]) }
-        else { sloop ($doc[1..$doc.Count]) ($sum + (cardScore $doc[0])) }
-    }
-
-    (sloop $doc 0)
+$function:docLoop = { param([object[]]$doc, $x, $sb)
+    if ($doc.Count -eq 1) { (&$sb $x $doc[0]) }
+    else { docLoop ($doc[1..$doc.Count]) (&$sb $x $doc[0]) $sb }
 }
 
-$function:docShow = { param([object[]]$doc)
-
-    $function:hloop = { param([object[]]$doc, $show)
-        if ($doc.Count -eq 1) { $show + (cardShow $doc[0]) }
-        else { hloop ($doc[1..$doc.Count]) ($show + (cardShow $doc[0]) + ',') }
-    }
-    
-    (hloop $doc '')
-}
+$function:docScore = { param ([object[]] $doc) (docLoop $doc 0 { param($x, $c) $x + (cardScore $c) }) }
+$function:docShow = { param([object[]]$doc) (docLoop $doc '' { param($x, $c) $x + (cardShow $c) + ' ' }) }
 
 $function:noCards = { param([object[]]$doc) $doc.Count -eq 0 }
 $function:isLT17 = { param([object[]]$doc) (docScore $doc) -lt 17 }
@@ -45,16 +33,13 @@ $function:isBJ = { param([object[]]$doc) (docScore $doc) -eq (&$BlackJack) }
 $function:isGTBJ = { param([object[]]$doc) (docScore $doc) -gt (&$BlackJack) }
 
 $function:giveReceiveX = { param($x, [object[]]$g, [object[]]$r)
-    $t = $g[0..($x - 1)]
-    ($g[2..$g.Count]), ($r + $t)
+    (& { param($t) ($g[2..$g.Count]), ($r + $t) } ($g[0..($x - 1)]))
 }
 
 $function:bjResult = { param($winner, [object[]]$me, [object[]]$magnus)
-    [ordered]@{  
-        winner = $winner
-        me     = [ordered]@{ score = (docScore $me); cards = (docShow $me) } 
-        magnus = [ordered]@{ score = (docScore $magnus); cards = (docShow $magnus) } 
-    } | ConvertTo-Json
+    $status = { param($d) [ordered]@{ score = (docScore $d); cards = (docShow $d) } }
+
+    [ordered]@{ winner = $winner; me = (&$status $me); magnus = (&$status $magnus) } | ConvertTo-Json
 }
 
 function blackjack {
@@ -67,13 +52,11 @@ function blackjack {
     $function:bjloop = { param($me, $magnus, $doc)
 
         $function:giveMe = { param($x)
-            $d, $e = (giveReceiveX $x $doc $me)
-            bjloop $e $magnus $d
+            (& { param([object[]]$d) bjloop $d[1] $magnus $d[0] } (giveReceiveX $x $doc $me))
         }
 
         $function:giveMagnus = { param($x)
-            $d, $a = (giveReceiveX $x $doc $magnus)
-            bjloop $me $a $d
+            (& { param([object[]]$d) bjloop $me $d[1] $d[0] } (giveReceiveX $x $doc $magnus))
         }
 
         $MagnusLEMe = { (docScore $magnus) -le (docScore $me) }
