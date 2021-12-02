@@ -26,7 +26,10 @@ module DeckOfCards =
         let folder (str: string) c = if str.Length = 0 then c else str + $" {c}"
         List.map Card.name >> List.fold folder ""
 
-    let private give = function | [] -> [],None | [h] -> [],Some h | h::t -> t,Some h
+    let private give = function 
+        | [] -> [],None 
+        | [h] -> [],Some h 
+        | h::t -> t,Some h
 
     let private receive = function 
         | [],None -> [] 
