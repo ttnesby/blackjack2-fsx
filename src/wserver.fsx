@@ -44,4 +44,7 @@ let app =
         ] 
     ]
 
-startWebServer defaultConfig app
+// https://pythonspeed.com/articles/docker-connection-refused/
+let cfg = { defaultConfig with bindings = [ HttpBinding.createSimple HTTP "0.0.0.0" 8080 ] }
+
+startWebServer cfg app
