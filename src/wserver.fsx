@@ -1,35 +1,28 @@
-#load @"./../.paket/load/Microsoft.AspNetCore.App.fsx"
-#load @"./../.paket/load/Giraffe.fsx"
+#load @"./../.paket/load/Suave.fsx"
+#load @"./bjPresentation.fsx"
 
-open System
-open Microsoft.AspNetCore.Builder
-open Microsoft.AspNetCore.Hosting
-open Microsoft.Extensions.Hosting
-open Microsoft.Extensions.DependencyInjection
-open Giraffe
+open Suave
+open Suave.Filters
+open Suave.Operators
+open Suave.Successful
 
-let webApp =
-    choose [
-        route "/ping"   >=> text "pong"
-        route "/"       >=> htmlFile "/pages/index.html" 
+let noOfBJGames noOfGames =
+    context (fun ctx ->
+    // get something from ctx.request...
+
+        OK(noOfGames.ToString())
+
+let app = 
+    choose [ 
+        GET >=> choose [ 
+            path "/hello" >=> OK "Hello GET"
+            path "/goodbye" >=> OK "Good bye GET" 
+            pathScan "/%d/play"  (fun (a) -> OK((a).ToString()))
+        ]
+        POST >=> choose [ 
+            path "/hello" >=> OK "Hello POST"
+            path "/goodbye" >=> OK "Good bye POST" 
+        ] 
     ]
 
-let configureApp (app : IApplicationBuilder) =
-    // Add Giraffe to the ASP.NET Core pipeline
-    app.UseGiraffe webApp
-
-let configureServices (services : IServiceCollection) =
-    // Add Giraffe dependencies
-    services.AddGiraffe() |> ignore
-
-
-Host.CreateDefaultBuilder()
-    .ConfigureWebHostDefaults(
-        fun webHostBuilder ->
-            webHostBuilder
-                .Configure(configureApp)
-                .ConfigureServices(configureServices)
-                |> ignore)
-    .Build()
-    .Run()
-0
+startWebServer defaultConfig app
