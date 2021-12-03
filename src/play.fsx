@@ -1,4 +1,4 @@
-#!/usr/bin/env -S dotnet fsi
+//#!/usr/bin/env -S dotnet fsi
 #load @"./parameters.fsx"
 #load @"./bjPresentation.fsx"
 
