@@ -6,16 +6,19 @@ module BJPresentation =
 
     open Blackjack
     open DeckOfCards
+    open System.Text
 
     let private fewResults (winner, me, magnus) =
-        printfn $"Winner: {winner}"
-        printfn $"me:     {Blackjack.score me} | {DeckOfCards.show me}"
-        printfn $"magnus: {Blackjack.score magnus} | {DeckOfCards.show magnus}"
-        printfn "-------------------------------------------------"
+        [
+            $"Winner: {winner}"
+            $"me:     {Blackjack.score me} | {DeckOfCards.show me}"
+            $"magnus: {Blackjack.score magnus} | {DeckOfCards.show magnus}"
+            "-------------------------------------------------"
+        ] |> List.fold (fun (r:StringBuilder) s -> r.AppendLine(s)) (StringBuilder())
 
     let few ra = Array.map fewResults ra
 
-    let private manySummary (s: string * _[]) = printfn $"{fst s} as winner of [{Array.length (snd s)}] games"
+    let private manySummary (s: string * _[]) = StringBuilder($"{fst s} as winner of [{Array.length (snd s)}] games")
 
     let many ra = 
         ra
