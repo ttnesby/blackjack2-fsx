@@ -5,4 +5,5 @@ storage: none
 framework: netcoreapp5.0
 
 nuget Suave
+nuget Thoth.Json.Net
 nuget NLog

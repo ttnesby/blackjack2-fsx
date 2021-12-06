@@ -1,41 +1,36 @@
 #load @"./../.paket/load/Suave.fsx"
+#load @"./parallellbj.fsx"
 #load @"./parameters.fsx"
-#load @"./bjPresentation.fsx"
 
 open Suave
 open Suave.Filters
 open Suave.Operators
 open Suave.Successful
 
-open Blackjack
-open DeckOfCards
-open ALogger
 open Parameter
-open BJPresentation
-
-let createGames p =
-        seq {for _ in 1..p -> Blackjack.play (DeckOfCards.random (System.Random())) [] []}
+open ALogger
+open ParallellBJ
 
 ALog.inf "Active"
 
+[<Literal>]
+let MaxNoOfGames = 100000
+
+
 let playBJ noOfGames = context (fun _ ->
     // get something from ctx.request...
-    ALog.inf "Active"
-    createGames noOfGames
-    |> ALog.logPassThroughX ALog.inf $"Created [{noOfGames}] games"
-    |> Async.Parallel
-    |> ALog.logPassThroughX ALog.inf $"Playing [{noOfGames}] games in parallell"
-    |> Async.RunSynchronously
-    |> ALog.logPassThroughX ALog.inf $"[{noOfGames}] games completed"
-    |> fun ra -> if noOfGames <= Parameter.DefaultNoOfGames then BJPresentation.few ra else BJPresentation.many ra
-    |> fun ra -> OK($"%A{ra}")
+    ParallellBJ.play 
+        MaxNoOfGames
+        Parameter.DefaultNoOfGames 
+        noOfGames 
+        (fun r -> OK($"%s{r}"))
+        (fun () -> RequestErrors.BAD_REQUEST("Number of games must be in range - [1, 100 000]"))    
 )
 
 let app = 
     choose [ 
         GET >=> choose [ 
-            path "/hello" >=> OK "Hello GET"
-            path "/goodbye" >=> OK "Good bye GET" 
+            path "/" >=> OK "/blackjack/{1 <= no_of_games <= 100 000}/games"
             pathScan "/blackjack/%d/games" playBJ
         ]
         POST >=> choose [ 
