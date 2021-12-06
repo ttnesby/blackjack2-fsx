@@ -24,7 +24,7 @@ let playBJ noOfGames = context (fun _ ->
         Parameter.DefaultNoOfGames 
         noOfGames 
         (fun r -> OK($"%s{r}"))
-        (fun () -> RequestErrors.BAD_REQUEST("Number of games must be in range - [1, 100 000]"))    
+        (fun () -> RequestErrors.BAD_REQUEST($"Number of games must be in range - [1, {MaxNoOfGames}]"))    
 )
 
 let app = 

@@ -20,7 +20,7 @@ Parameter.get ()
         Parameter.DefaultNoOfGames 
         p.NoOfGames 
         (fun r -> printfn $"{r}"; 0)
-        (fun () -> ALog.wrn "Number of games must be in range [1, 1 000 000]"; 1)
+        (fun () -> ALog.wrn $"Number of games must be in range [1, {MaxNoOfGames}]"; 1)
 | Error e -> ALog.err $"{e}"; 1
 |> fun i ->
     ALog.inf $"Exit code: {i}"
