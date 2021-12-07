@@ -10,4 +10,4 @@ RUN ["dotnet","tool","restore"]
 RUN ["dotnet","paket","restore"]
 RUN ["dotnet", "paket", "generate-load-scripts", "--type", "fsx"]
 
-ENTRYPOINT ["dotnet","fsi","/src/play.fsx","100000"]
+ENTRYPOINT ["dotnet","fsi","/src/wserver.fsx"]
