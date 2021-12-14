@@ -32,6 +32,11 @@ module Blackjack =
     let private isLT17 doc = score doc < 17
     let private isGTBJ doc = score doc > BlackJack
 
+    type Winner =
+    | Draw
+    | Me
+    | Magnus
+
     let play doc me magnus = async {
 
         let rec loop doc me magnus =
@@ -42,21 +47,18 @@ module Blackjack =
             let magnus' f = f magnus |> fun (doc',magnus') -> loop doc' me magnus'
             let isLEMe magnus = score magnus <= score me
             let result winner = winner, me, magnus
-            let wMe = result "Me"
-            let wMagnus = result "Magnus"
 
             match (me, magnus) with
             | [], _ -> me' getTwoCards
             | _, [] -> magnus' getTwoCards
-            | [_;_], [_;_] when isBJ me && isBJ magnus -> result "Draw"
-            | [_;_], _ when isBJ me -> wMe
-            | _, [_;_] when isBJ magnus -> wMagnus
+            | [_;_], [_;_] when isBJ me && isBJ magnus -> result Draw
+            | [_;_], _ when isBJ me -> result Me
+            | _, [_;_] when isBJ magnus -> result Magnus
             | _::_, _ when isLT17 me -> me' getACard
-            | _::_, _ when isBJ me -> wMe 
-            | _::_, _ when isGTBJ me -> wMagnus            
+            | _::_, _ when isGTBJ me -> result Magnus
             | _, _::_ when isLEMe magnus -> magnus' getACard
-            | _, _::_ when isGTBJ magnus -> wMe
-            | _, _ -> wMagnus
+            | _, _::_ when isGTBJ magnus -> result Me
+            | _, _ -> result Magnus
 
-        return loop doc me magnus
+        return (loop doc me magnus)
     }
