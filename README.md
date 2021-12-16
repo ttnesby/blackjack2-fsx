@@ -12,7 +12,7 @@ Not much to say about the code. Focus on F# scripting - no build.
 > - `/src/parameters.fsx` manage parameter(s), `noOfGames` for the console game
 > - `/src/play.fsx` is console black jack game
 > - `/src/wserver.fsx` is a [Suave](https://suave.io/) lightweight web server black jack game
-> - `/Dockerfile` build a docker container of the Suave web server part 
+> - `/Dockerfile` build a docker container for Suave web server 
 
 ```zsh
 # build docker container
@@ -21,8 +21,7 @@ docker build --pull --rm -f "Dockerfile" -t blackjack2fsx:latest "."
 # running docker container
 docker run -d -p 900:8080 blackjack2fsx:latest
 ```
-
-```powershell 
+```powershell
 # test the web server - root
 Invoke-RestMethod -Uri 'http://localhost:900/'
 

@@ -14,12 +14,12 @@ module BJPresentation =
         Hand: string
     }
 
-    let toPlayerstatus hand = {
+    let playerStatus hand = {
         Score = Blackjack.score hand
         Hand = DeckOfCards.show hand
     }
     type GameResult = {
-        Winner : string
+        Winner : Blackjack.Winner
         Magnus: PlayerStatus
         Me: PlayerStatus
     }
@@ -27,25 +27,25 @@ module BJPresentation =
     let private toGameResult(winner, me, magnus) =
         {
             Winner = winner
-            Magnus = toPlayerstatus magnus
-            Me = toPlayerstatus me
+            Magnus = playerStatus magnus
+            Me = playerStatus me
         }
 
     type GameSummary = {
-        Winner: string
+        Winner: Blackjack.Winner
         Games : int
     }
 
     let few ra = ra |> Array.map toGameResult |> fun r -> Encode.Auto.toString(4, r)
 
-    let private manySummary (s: string * _[]) = {
+    let private manySummary (s: Blackjack.Winner * _[]) = {
         Winner = fst s
         Games = Array.length (snd s)
     }
 
     let many ra =
         ra
-        |> Array.map (fun (w: string, _, _) -> w)
+        |> Array.map (fun (w: Blackjack.Winner, _, _) -> w)
         |> Array.groupBy id
         |> Array.sortBy fst
         |> Array.map manySummary
