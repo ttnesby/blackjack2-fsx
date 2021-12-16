@@ -14,7 +14,7 @@ module BJPresentation =
         Hand: string
     }
 
-    let toPlayerstatus hand = {
+    let playerStatus hand = {
         Score = Blackjack.score hand
         Hand = DeckOfCards.show hand
     }
@@ -27,8 +27,8 @@ module BJPresentation =
     let private toGameResult(winner, me, magnus) =
         {
             Winner = winner
-            Magnus = toPlayerstatus magnus
-            Me = toPlayerstatus me
+            Magnus = playerStatus magnus
+            Me = playerStatus me
         }
 
     type GameSummary = {
