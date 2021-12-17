@@ -13,7 +13,7 @@ module ParallelBJ =
     let private createGames p =
         seq {for _ in 1..p -> Blackjack.play (DeckOfCards.random (System.Random())) [] []}
 
-    let play max detailsLimit noOfGames fResult fOutsideRange =
+    let play max detailsLimit fResult fOutsideRange noOfGames  =
         match noOfGames with
         | x when x >= 1 && x <= max ->
             createGames noOfGames
@@ -23,8 +23,6 @@ module ParallelBJ =
             |> Async.RunSynchronously
             |> ALog.logPassThroughX ALog.inf $"[{noOfGames}] games completed"
             |> fun ra ->
-                if noOfGames <= detailsLimit
-                then BJPresentation.few ra
-                else BJPresentation.many ra
-            |> fun r -> r |> fResult
+                (if noOfGames <= detailsLimit then BJPresentation.few ra else BJPresentation.many ra)
+                |> fResult
         | _ -> fOutsideRange()

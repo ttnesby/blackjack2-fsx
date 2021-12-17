@@ -1,13 +1,11 @@
 #load @"./../.paket/load/Suave.fsx"
-#load @"./parallelbj.fsx"
-#load @"./parameters.fsx"
+#load @"./bjParallel.fsx"
 
 open Suave
 open Suave.Filters
 open Suave.Operators
 open Suave.Successful
 
-open Parameter
 open ALogger
 open ParallelBJ
 
@@ -16,26 +14,22 @@ ALog.inf "Active"
 [<Literal>]
 let MaxNoOfGames = 100000
 
+[<Literal>]
+let DetailsLimit = 20
 
-let playBJ noOfGames = context (fun _ ->
-    // get something from ctx.request...
-    ParallelBJ.play
-        MaxNoOfGames
-        Parameter.DefaultNoOfGames
-        noOfGames
-        (fun r -> OK($"%s{r}"))
-        (fun () -> RequestErrors.BAD_REQUEST($"Number of games must be in range - [1, {MaxNoOfGames}]"))
-)
+let play = ParallelBJ.play
+            MaxNoOfGames
+            DetailsLimit
+            (fun r -> OK($"%s{r}"))
+            (fun () -> RequestErrors.BAD_REQUEST($"Number of games must be in range - [1, {MaxNoOfGames}]"))
+
+let playBJ noOfGames = context (fun _ -> play noOfGames)
 
 let app =
     choose [
         GET >=> choose [
             path "/" >=> OK "/blackjack/{1 <= no_of_games <= 100 000}/games"
             pathScan "/blackjack/%d/games" playBJ
-        ]
-        POST >=> choose [
-            path "/hello" >=> OK "Hello POST"
-            path "/goodbye" >=> OK "Good bye POST"
         ]
     ]
 
