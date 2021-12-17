@@ -17,11 +17,12 @@ let MaxNoOfGames = 100000
 [<Literal>]
 let DetailsLimit = 20
 
-let play = ParallelBJ.play
-            MaxNoOfGames
-            DetailsLimit
-            (fun r -> OK($"%s{r}"))
-            (fun () -> RequestErrors.BAD_REQUEST($"Number of games must be in range - [1, {MaxNoOfGames}]"))
+let fResult r = ALog.inf $"{r}" ;OK($"{r}")
+let fOutsideRange () =
+        let errMsg () = $"Number of games must be in range - [1, {MaxNoOfGames}]"
+        ALog.wrn (errMsg())
+        RequestErrors.BAD_REQUEST(errMsg ())
+let play = ParallelBJ.play MaxNoOfGames DetailsLimit fResult fOutsideRange
 
 let playBJ noOfGames = context (fun _ -> play noOfGames)
 

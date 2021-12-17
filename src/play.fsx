@@ -14,11 +14,9 @@ let MaxNoOfGames = 1000000
 [<Literal>]
 let DetailsLimit = 10
 
-let play = ParallelBJ.play
-                    MaxNoOfGames
-                    DetailsLimit
-                    (fun r -> ALog.inf $"{r}"; 0)
-                    (fun () -> ALog.wrn $"Number of games must be in range [1, {MaxNoOfGames}]"; 1)
+let fResult r = ALog.inf $"{r}"; 0
+let fOutsideRange () = ALog.wrn $"Number of games must be in range [1, {MaxNoOfGames}]"; 1
+let play = ParallelBJ.play MaxNoOfGames DetailsLimit fResult fOutsideRange
 
 Parameter.get ()
 |> Async.RunSynchronously
