@@ -14,6 +14,7 @@ Not much to say about the code. Focus on F# scripting - no build.
 > - `/src/wserver.fsx` is a [Suave](https://suave.io/) lightweight web server black jack game
 > - `/Dockerfile` build a docker container for Suave web server 
 
+# Test docker image
 ```zsh
 # build docker container
 docker build --pull --rm -f "Dockerfile" -t blackjack2fsx:latest "."
@@ -53,4 +54,55 @@ Winner Games
 Draw     188
 Magnus 53415
 Me     46397
+```
+# Push image to Docker Hub
+
+```zsh
+# login to docker
+docker login
+
+# output
+Authenticating with existing credentials...
+Login Succeeded
+
+Logging in with your password grants your terminal complete access to your account.
+For better security, log in with a limited-privilege personal access token. Learn more at https://docs.docker.com/go/access-tokens/
+
+# see docker images
+docker images
+
+# output
+REPOSITORY                     TAG          IMAGE ID       CREATED          SIZE
+blackjack2fsx                  latest       f5e25c629a16   45 minutes ago   666MB
+mcr.microsoft.com/dotnet/sdk   6.0-alpine   9d2c47a10a43   2 days ago       579MB
+blackjack2fsx                  1.0          fda98ab9e5f6   10 days ago      665MB
+ttnesby/blackjack2fsx          1.0          fda98ab9e5f6   10 days ago      665MB
+ttnesby/blackjack2fsx          latest       fda98ab9e5f6   10 days ago      665MB
+dockerfsx                      latest       d20dc352896c   2 weeks ago      578MB
+
+# re-tag latest image with repo prefix
+docker tag blackjack2fsx:latest ttnesby/blackjack2fsx:latest
+
+# output
+
+# push repo prefixed image to docker hub
+docker push ttnesby/blackjack2fsx:latest
+
+# output
+The push refers to repository [docker.io/ttnesby/blackjack2fsx]
+7d70e7700ff3: Pushed
+6daad2d19466: Pushed
+2bb1bcfa94ce: Pushed
+056338cf753c: Pushed
+6c8b52ff5f7e: Pushed
+a443873b44c8: Pushed
+d50e19f37caf: Pushed
+146c4f3f0117: Pushed
+f73c9c5cb77b: Pushed
+11458683b1a7: Pushed
+2fc5396cf731: Pushed
+11c15b90ebce: Pushed
+98bc857b3aed: Layer already exists
+1a058d5342cc: Layer already exists
+latest: digest: sha256:01da91ac551dadee272c1e19661add52765b49d5410c8e6b4dce9dda258e0e6b size: 3260
 ```
