@@ -1,12 +1,12 @@
 GENERATE-LOAD-SCRIPTS: OFF
 STORAGE: NONE
-RESTRICTION: == netcoreapp5.0
+RESTRICTION: == net5.0
 NUGET
   remote: https://api.nuget.org/v3/index.json
     Fable.Core (3.6.1)
     FSharp.Core (6.0.1)
     Newtonsoft.Json (13.0.1)
-    NLog (4.7.12)
+    NLog (4.7.13)
     Suave (2.6.1)
       FSharp.Core
     Thoth.Json.Net (7.1)
