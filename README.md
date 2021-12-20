@@ -1,5 +1,7 @@
 # blackjack2-fsx
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ttnesby/blackjack2-fsx)
+
 Not much to say about the code. Focus on F# scripting - no build.
 
 > - `/paket.dependencies` is the [packet manager](https://fsprojects.github.io/Paket/)
