@@ -3,7 +3,7 @@ image:
 
 tasks:
   - name: resolve paket dependencies
-    init: |
+    command: |
       dotnet tool restore
       dotnet paket restore
       dotnet paket generate-load-scripts --type fsx
