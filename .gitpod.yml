@@ -1,3 +1,7 @@
 vscode:
   extensions:
-    - Ionide.Ionide-fsharp@4.6.2
+    - ionide.ionide-fsharp
+    - oderwat.indent-rainbow
+    - esbenp.prettier-vscode
+    - ms-azuretools.vscode-docker
+    - vscode-icons-team.vscode-icons
