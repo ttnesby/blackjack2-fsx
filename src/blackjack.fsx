@@ -6,7 +6,7 @@ module Blackjack =
 
     open Card
     open DeckOfCards
-     // a comment 
+     // a comment - mapping from card value to blackjack score
     let private cardScore (_,v) =
         match v with
         | Card.Value.Two -> 2
