@@ -1,5 +1,13 @@
 image: 
   gitpod/workspace-dotnet
+
+tasks:
+  - name: resolve paket dependencies
+    init: |
+      dotnet tool restore
+      dotnet paket restore
+      dotnet paket generate-load-scripts --type fsx
+
 vscode:
   extensions:
     - ionide.ionide-fsharp
