@@ -15,6 +15,8 @@ tasks:
   - name: manage dependencies
     command: |
       dotnet tool restore
+      rm ./.paket --recursive
+      rm ./paket-files --recursiv
       dotnet paket restore
       dotnet paket generate-load-scripts --type fsx
 
