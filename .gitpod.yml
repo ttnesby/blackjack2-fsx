@@ -24,5 +24,6 @@ vscode:
     - esbenp.prettier-vscode
     - ms-azuretools.vscode-docker
     - vscode-icons-team.vscode-icons
+    - ms-vscode.powershell-preview
     - muhammad-sammy.csharp
     - ionide.ionide-fsharp
