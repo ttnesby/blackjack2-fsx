@@ -1,9 +1,18 @@
+github:
+  prebuilds:
+    master: true
+    branches: true
+    pullRequests: false
+    pullRequestsFromForks: false
+    addCheck: false
+    addComment: false
+    addBadge: true
+
 image: 
   gitpod/workspace-dotnet
 
 tasks:
-  - name: manage packet dependencies
-    before: |
+  - before: |
       dotnet tool restore
       dotnet paket restore
       dotnet paket generate-load-scripts --type fsx
