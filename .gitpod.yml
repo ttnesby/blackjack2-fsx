@@ -12,8 +12,11 @@ image:
   gitpod/workspace-dotnet
 
 tasks:
-  - before: |
+  - name: paket availability 
+    init: |
       dotnet tool restore
+  - name: manage dependencies
+    command: |
       dotnet paket restore
       dotnet paket generate-load-scripts --type fsx
 
