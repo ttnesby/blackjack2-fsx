@@ -9,12 +9,9 @@ github:
     addBadge: true
 
 image: 
-  gitpod/workspace-dotnet
+  file: .gitpod.Dockerfile
 
 tasks:
-  - name: paket availability 
-    init: |
-      dotnet tool restore
   - name: manage dependencies
     command: |
       dotnet paket restore
