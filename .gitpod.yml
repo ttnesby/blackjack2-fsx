@@ -14,14 +14,15 @@ image:
 tasks:
   - name: manage dependencies
     command: |
+      dotnet tool restore
       dotnet paket restore
       dotnet paket generate-load-scripts --type fsx
 
 vscode:
   extensions:
-    - muhammad-sammy.csharp
-    - ionide.ionide-fsharp
     - oderwat.indent-rainbow
     - esbenp.prettier-vscode
     - ms-azuretools.vscode-docker
     - vscode-icons-team.vscode-icons
+    - muhammad-sammy.csharp
+    - ionide.ionide-fsharp
